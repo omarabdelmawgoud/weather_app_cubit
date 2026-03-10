@@ -9,8 +9,8 @@ class WeatherModel {
   String weatherStateName;
 
   WeatherModel(
-      this.cityName,
       {required this.date,
+      required this.cityName,
       required this.temp,
       required this.maxTemp,
       required this.minTemp,
@@ -20,7 +20,7 @@ class WeatherModel {
     var jsonData = data['forecast']['forecastday'][0]['day'];
 
     return WeatherModel(
-        jsonData['location']['name'],
+        cityName: data['location']['name'],
         date: DateTime.parse(data['current']['last_updated']),
         temp: jsonData['avgtemp_c'],
         maxTemp: jsonData['maxtemp_c'],

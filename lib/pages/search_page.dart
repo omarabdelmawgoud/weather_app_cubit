@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/cubit/weather_cubit/weather_cubit.dart';
-import 'package:weather_app/models/weather_model.dart';
-import 'package:weather_app/services/weather_service.dart';
 
 class SearchPage extends StatelessWidget {
   late String? cityName;
@@ -17,8 +15,12 @@ class SearchPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: TextField(
+            onChanged: (value) {
+              cityName = value;
+            },
             onSubmitted: (data) async {
               cityName = data;
+              BlocProvider.of<WeatherCubit>(context).getWeather(cityName!);
 
               Navigator.pop(context);
             },
@@ -28,12 +30,8 @@ class SearchPage extends StatelessWidget {
               label: const Text('search'),
               suffixIcon: GestureDetector(
                   onTap: () async {
-                    WeatherService service = WeatherService();
-
-                    WeatherModel? weather =
-                        await service.getWeather(cityName: cityName!);
-                    BlocProvider.of<WeatherCubit>(context).weatherModel =
-                        weather;
+                    BlocProvider.of<WeatherCubit>(context)
+                        .getWeather(cityName!);
 
                     Navigator.pop(context);
                   },

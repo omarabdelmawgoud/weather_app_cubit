@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/cubit/weather_cubit/weather_cubit.dart';
 import 'package:weather_app/cubit/weather_cubit/weather_state.dart';
+import 'package:weather_app/models/weather_model.dart';
 import 'package:weather_app/pages/search_page.dart';
+import 'package:weather_app/widgets/home_page_body.dart';
+import 'package:weather_app/widgets/no_weather_body.dart';
 
 class HoemPage extends StatelessWidget {
-  final bool ok = true;
-
-  const HoemPage({Key? key}) : super(key: key);
+  HoemPage({Key? key}) : super(key: key);
+  WeatherModel? weatherModel;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,70 +28,8 @@ class HoemPage extends StatelessWidget {
       ),
       body: BlocBuilder<WeatherCubit, WeatherState>(builder: (context, state) {
         if (state is WeatherSuccessState) {
-          return Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-              colors: [
-                state.weatherModel.getThemeColor(),
-                state.weatherModel.getThemeColor()[300]!,
-                state.weatherModel.getThemeColor()[100]!,
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            )),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Spacer(
-                  flex: 3,
-                ),
-                Text(
-                  state.weatherModel.cityName,
-                  style: const TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  'updated at : ${state.weatherModel.date.hour.toString()}:${state.weatherModel.date.minute.toString()}',
-                  style: const TextStyle(
-                    fontSize: 22,
-                  ),
-                ),
-                const Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Image.asset(state.weatherModel.getImage()),
-                    Text(
-                      state.weatherModel.temp.toInt().toString(),
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        Text('maxTemp :${state.weatherModel.maxTemp.toInt()}'),
-                        Text('minTemp : ${state.weatherModel.minTemp.toInt()}'),
-                      ],
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                Text(
-                  state.weatherModel.weatherStateName,
-                  style: const TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Spacer(
-                  flex: 5,
-                ),
-              ],
-            ),
-          );
+          weatherModel=  BlocProvider.of<WeatherCubit>(context).weatherModel;
+          return HomePageBody(weatherModel: weatherModel!);
         } else if (state is WeatherFaliureState) {
           return Center(
             child: Text(
@@ -102,25 +42,7 @@ class HoemPage extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         } else {
-          return const Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'there is no weather 😔 start',
-                  style: TextStyle(
-                    fontSize: 30,
-                  ),
-                ),
-                Text(
-                  'searching now 🔍',
-                  style: TextStyle(
-                    fontSize: 30,
-                  ),
-                )
-              ],
-            ),
-          );
+          return const NoWeatherBody();
         }
       }),
     );
