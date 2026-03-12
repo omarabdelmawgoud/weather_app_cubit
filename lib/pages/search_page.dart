@@ -2,9 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/cubit/weather_cubit/weather_cubit.dart';
 
-class SearchPage extends StatelessWidget {
-  late String? cityName;
-  SearchPage({Key? key}) : super(key: key);
+class SearchPage extends StatefulWidget {
+
+  const SearchPage({Key? key}) : super(key: key);
+
+  @override
+  State<SearchPage> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  String? cityName;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

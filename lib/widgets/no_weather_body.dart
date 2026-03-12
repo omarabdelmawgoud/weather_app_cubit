@@ -23,6 +23,6 @@ class NoWeatherBody extends StatelessWidget {
                 )
               ],
             ),
-          );;
+          );
   }
 }
